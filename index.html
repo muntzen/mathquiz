@@ -19,8 +19,6 @@
             margin: 0;
             padding: 20px;
             font-size: 36px;
-            /* background-color: #3498db;
-            color: #fff; */
         }
 
         #instructions {
@@ -31,13 +29,17 @@
         .box {
             width: 100px;
             height: 100px;
+            padding: 20px;
             margin: 50px;
             border: 2px solid #999;
             border-radius: 10px;
-            display: inline-block;
+            display: inline-flex;
             text-align: center;
-            line-height: 100px;
+            vertical-align: middle;
+            line-height: normal;
             cursor: pointer;
+            justify-content: center;
+            align-items: center;
         }
 
         .droppable {
@@ -62,14 +64,18 @@
             cursor: pointer;
             margin-top: 20px;
         }
-      /* Responsive layout for mobile devices */
-@media (max-width: 600px) {
-  .box,
-  .droppable {
-    width: 23%; /* Adjusted width for better mobile display */
-    margin: 5px auto; /* Center the boxes on smaller screens */
-  }
-}
+
+        /* Responsive layout for mobile devices */
+        @media (max-width: 600px) {
+
+            .box,
+            .droppable {
+                padding: 5px;
+                width: 20%;
+                /* Adjusted width for better mobile display */
+                margin: 5px auto;
+                /* Center the boxes on smaller screens */
+            }
     </style>
 </head>
 
