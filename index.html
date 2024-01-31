@@ -6,218 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brain Fresh Math Quiz Game</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <style>
-        body {
-            background-color: #fff;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
-
-        h1 {
-            margin: 0;
-            padding: 20px;
-            font-size: 36px;
-        }
-
-        #instructions {
-            font-size: 24px;
-            margin: 20px;
-        }
-
-        .box {
-            width: 100px;
-            height: 100px;
-            padding: 20px;
-            margin: 50px;
-            border: 2px solid #999;
-            border-radius: 10px;
-            display: inline-flex;
-            text-align: center;
-            vertical-align: middle;
-            line-height: normal;
-            cursor: pointer;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .droppable {
-            border: 2px dashed #3498db;
-            background-color: #f2f2f2;
-            position: relative;
-            /* Add this line */
-        }
-
-        #bottomRow {
-            text-align: center;
-        }
-
-        #submitBtn {
-            width: 200px;
-            height: 50px;
-            border: none;
-            border-radius: 10px;
-            background-color: #3498db;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        /* Responsive layout for mobile devices */
-        @media (max-width: 600px) {
-
-            .box,
-            .droppable {
-                padding: 5px;
-                width: 20%;
-                /* Adjusted width for better mobile display */
-                margin: 5px auto;
-                /* Center the boxes on smaller screens */
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
-    <h1>Math Quiz Game</h1>
+    <header>
+        <h1>Math Quiz Game</h1>
 
-    <div id="instructions">
-        Arrange the equations in the correct order from smallest to largest.
-    </div>
+        <div id="instructions">
+            Arrange the equations in the correct order from smallest to largest.
+        </div>    
+    </header>
 
-    <div id="topRow">
-        <div class="box draggable" id="box1">&nbsp;</div>
-        <div class="box draggable" id="box2">&nbsp;</div>
-        <div class="box draggable" id="box3">&nbsp;</div>
-        <div class="box draggable" id="box4">&nbsp;</div>
-    </div>
-
-    <div id="bottomRow">
-        <div class="box droppable" id="dropBox1">&nbsp;</div>
-        <div class="box droppable" id="dropBox2">&nbsp;</div>
-        <div class="box droppable" id="dropBox3">&nbsp;</div>
-        <div class="box droppable" id="dropBox4">&nbsp;</div>
-    </div>
-
-    <button id="submitBtn">Submit Answer</button>
-
+    <main>
+        <div id="topRow">
+            <div class="box draggable" id="box1">&nbsp;</div>
+            <div class="box draggable" id="box2">&nbsp;</div>
+            <div class="box draggable" id="box3">&nbsp;</div>
+            <div class="box draggable" id="box4">&nbsp;</div>
+        </div>
+    
+        <div id="bottomRow">
+            <div class="box droppable" id="dropBox1">&nbsp;</div>
+            <div class="box droppable" id="dropBox2">&nbsp;</div>
+            <div class="box droppable" id="dropBox3">&nbsp;</div>
+            <div class="box droppable" id="dropBox4">&nbsp;</div>
+        </div>
+    
+        <button id="submitBtn">Submit Answer</button>
+        <button id="playAgainBtn" style="display:none;">Play Again</button>
+    </main>
+    
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="jquery.ui.touch-punch.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".box").draggable({
-                revert: "invalid",
-                helper: "clone", // when you drag, it'll clone it instead of take it with you
-                zIndex: 10000 // this is to make sure the dragged element is always on top
-            });
-
-            $(".box").droppable({
-                accept: ".draggable",
-                drop: function (event, ui) {
-                    if ($(this).hasClass("draggable")) {
-                        ui.draggable.draggable("option", "revert", true);
-                    } else {
-                        $(this).html(ui.draggable.html());
-                        $(this).removeClass("droppable");
-                        $(this).addClass("draggable");
-                        $(this).addClass("nonempty");
-
-
-                        ui.draggable.html("&nbsp;");
-                        ui.draggable.removeClass("draggable");
-                        ui.draggable.removeClass("nonempty");
-                        ui.draggable.addClass("droppable");
-                    }
-                }
-
-            });
-
-            $("#submitBtn").click(function () {
-                const vals = [];
-                $("#bottomRow div").each(function () {
-                    let equation = $(this).text().trim();
-                    if (equation != '') {
-                        vals.push(eval($(this).text().trim()));
-                    }
-                });
-                if (vals.length < $("#bottomRow div").length) {
-                    alert("Please fill in all the boxes");
-                } else {
-                    let correct = true;
-                    let previousVal = vals[0];
-                    for (let i = 1; i < vals.length; i++) {
-                        if (previousVal > vals[i]) {
-                            correct = false;
-                            break;
-                        }
-                    }
-                    if (correct) {
-                        alert("Correct!");
-                    } else {
-                        alert("Incorrect!");
-                    }
-                }
-            });
-            initialize();
-        });
-
-
-        function initialize() {
-            $("#topRow div").each(function () {
-                $(this).html(buildEquation());
-            });
-        }
-
-
-        function getRandomNumber(highest) {
-            return Math.floor(Math.random() * highest);
-        }
-
-        function getGroupedOperation(operation, highest) {
-            let equation = "";
-            if (Math.floor(Math.random() * 2) == 0) {
-                equation = "(" + getRandomNumber(highest) + " " + operation + " " + getRandomNumber(highest) + ")";
-            } else {
-                equation = getRandomNumber(highest);
-            }
-            return equation;
-        }
-
-        function getRandomOperation() {
-            switch(Math.floor(Math.random() * 4)) {
-                case 0:
-                    return "/";
-                case 1:
-                    return "*";
-                case 2:
-                    return "+";
-                case 3:
-                    return "-";
-            }
-        }
-
-        function buildEquation() {
-            let highestNumber = 20;
-            switch(Math.floor(Math.random() * 4)) {
-                case 0: {// random division problem
-                    return getGroupedOperation(getRandomOperation(), highestNumber) + " / " + getGroupedOperation(getRandomOperation(), highestNumber);
-                }
-                case 1: {// random multiplication problem
-                    return getGroupedOperation(getRandomOperation(), highestNumber) + " * " + getGroupedOperation(getRandomOperation(), highestNumber);
-                }
-                case 2: {// random addition problem
-                    return getGroupedOperation(getRandomOperation(), highestNumber) + " + " + getGroupedOperation(getRandomOperation(), highestNumber);
-                }
-                case 3: {// random subtraction problem
-                    return getGroupedOperation(getRandomOperation(), highestNumber) + " - " + getGroupedOperation(getRandomOperation(), highestNumber);
-                }
-            }
-        }
-    </script>
+    <script src="jquery.fireworks.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
