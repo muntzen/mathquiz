@@ -48,9 +48,20 @@ function checkAnswers() {
         for (let i = 1; i < vals.length; i++) {
             if (previousVal > vals[i]) {
                 correct = false;
+                if (i > 1) {
+                    $("#bottomRow div").eq(i-1).addClass("correct");        
+                }
+                $("#bottomRow div").eq(i-1).addClass("incorrect");
                 break;
             }
+
+            $("#bottomRow div").eq(i-1).addClass("correct");
+            if (i == vals.length - 1) {
+                $("#bottomRow div").eq(i).addClass("correct");    
+            }
+            previousVal = vals[i];
         }
+
         if (correct) { 
             $("#submitBtn").hide();
             
@@ -62,13 +73,19 @@ function checkAnswers() {
                 $("#playAgainBtn").show();
             }, 3000);
         } else {
-            alert("Incorrect!");
+            setTimeout(function () {
+                alert("Incorrect!");
+                setTimeout(function () {
+                    clearResultColors();
+                }, 1000);
+            }, 500);
         }
     }
 }
 
 function initialize() {
     $("main").fireworks("destroy");
+    clearResultColors();
 
     $("#topRow div").each(function () {
         $(this).html(buildEquation());
@@ -84,6 +101,11 @@ function initialize() {
 
     $("#submitBtn").show();
     $("#playAgainBtn").hide();
+}
+
+function clearResultColors() {
+    $("#bottomRow div").removeClass("correct");
+    $("#bottomRow div").removeClass("incorrect");
 }
 
 function debug() {

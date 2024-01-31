@@ -33,6 +33,14 @@ h1 {
     align-items: center;
 }
 
+.correct {
+    background-color: mediumseagreen;
+}
+
+.incorrect {
+    background-color: #C41E3A;
+}
+
 .droppable {
     border: 2px dashed #3498db;
     background-color: #f2f2f2;
