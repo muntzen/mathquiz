@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Quiz Game</title>
+    <title>Brain Fresh Math Quiz Game</title>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <style>
         body {
@@ -76,6 +76,7 @@
                 margin: 5px auto;
                 /* Center the boxes on smaller screens */
             }
+        }
     </style>
 </head>
 
@@ -88,10 +89,10 @@
     </div>
 
     <div id="topRow">
-        <div class="box draggable" id="box1">(10 + 20)/(30 + 80)</div>
-        <div class="box draggable" id="box2">(4 * 5) - 2</div>
-        <div class="box draggable" id="box3">(10 / 2) + 3</div>
-        <div class="box draggable" id="box4">(7 - 2) * 4</div>
+        <div class="box draggable" id="box1">&nbsp;</div>
+        <div class="box draggable" id="box2">&nbsp;</div>
+        <div class="box draggable" id="box3">&nbsp;</div>
+        <div class="box draggable" id="box4">&nbsp;</div>
     </div>
 
     <div id="bottomRow">
@@ -140,7 +141,6 @@
                 $("#bottomRow div").each(function () {
                     let equation = $(this).text().trim();
                     if (equation != '') {
-                        console.log("attempt to eval: " + $(this).text().trim());
                         vals.push(eval($(this).text().trim()));
                     }
                 });
@@ -162,7 +162,61 @@
                     }
                 }
             });
+            initialize();
         });
+
+
+        function initialize() {
+            $("#topRow div").each(function () {
+                $(this).html(buildEquation());
+            });
+        }
+
+
+        function getRandomNumber(highest) {
+            return Math.floor(Math.random() * highest);
+        }
+
+        function getGroupedOperation(operation, highest) {
+            let equation = "";
+            if (Math.floor(Math.random() * 2) == 0) {
+                equation = "(" + getRandomNumber(highest) + " " + operation + " " + getRandomNumber(highest) + ")";
+            } else {
+                equation = getRandomNumber(highest);
+            }
+            return equation;
+        }
+
+        function getRandomOperation() {
+            switch(Math.floor(Math.random() * 4)) {
+                case 0:
+                    return "/";
+                case 1:
+                    return "*";
+                case 2:
+                    return "+";
+                case 3:
+                    return "-";
+            }
+        }
+
+        function buildEquation() {
+            let highestNumber = 20;
+            switch(Math.floor(Math.random() * 4)) {
+                case 0: {// random division problem
+                    return getGroupedOperation(getRandomOperation(), highestNumber) + " / " + getGroupedOperation(getRandomOperation(), highestNumber);
+                }
+                case 1: {// random multiplication problem
+                    return getGroupedOperation(getRandomOperation(), highestNumber) + " * " + getGroupedOperation(getRandomOperation(), highestNumber);
+                }
+                case 2: {// random addition problem
+                    return getGroupedOperation(getRandomOperation(), highestNumber) + " + " + getGroupedOperation(getRandomOperation(), highestNumber);
+                }
+                case 3: {// random subtraction problem
+                    return getGroupedOperation(getRandomOperation(), highestNumber) + " - " + getGroupedOperation(getRandomOperation(), highestNumber);
+                }
+            }
+        }
     </script>
 </body>
 
