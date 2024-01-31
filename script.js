@@ -63,13 +63,13 @@ function checkAnswers() {
         }
 
         if (correct) { 
-            $("#submitBtn").hide();
-            
-            $("main").fireworks();
+            setTimeout(function () {
+                $("#submitBtn").hide();
+                $("main").fireworks();
+            }, 10);
+
             setTimeout(function () {
                 $("main").fireworks("destroy");
-            }, 5000);
-            setTimeout(function () {
                 $("#playAgainBtn").show();
             }, 3000);
         } else {
@@ -114,18 +114,44 @@ function debug() {
     });
 }
 
-function getRandomNumber(highest) {
-    return Math.floor(Math.random() * highest);
+function getRandomNumber(highestNumber) {
+    return Math.floor(Math.random() * highestNumber);
 }
 
-function getGroupedOperation(operation, highest) {
+function getGroupedOperation(operation, highestNumber) {
     let equation = "";
     if (Math.floor(Math.random() * 2) == 0) {
-        equation = "(" + getRandomNumber(highest) + " " + operation + " " + getRandomNumber(highest) + ")";
+        equation = "(" + getRandomNumber(highestNumber) + " " + operation + " " + getRandomNumber(highestNumber) + ")";
     } else {
-        equation = getRandomNumber(highest);
+        equation = getRandomNumber(highestNumber);
     }
     return equation;
+}
+
+function buildEquationParts(mainOperation, highestNumber) {
+    let parts = "";
+    let complex = Math.floor(Math.random() * 2) == 0;
+    if (complex) {
+        parts += "(" + getRandomNumber(highestNumber) + " " + getRandomOperation() + " " + getRandomNumber(highestNumber) + ")";
+    } else {
+        parts += getRandomNumber(highestNumber);
+    }
+
+    parts += " " + mainOperation + " ";
+
+    // if already complex, or we randomly decide to be complex, then just add a number
+    if (complex || Math.floor(Math.random() * 2) == 0) {
+        parts += getRandomNumber(highestNumber);
+    } else {
+        parts += "(" + getRandomNumber(highestNumber) + " " + getRandomOperation() + " " + getRandomNumber(highestNumber) + ")";
+    }
+
+    // let's make sure things are sane
+    if (eval(parts) == 'Infinity') {
+        return buildEquationParts(mainOperation, highestNumber);
+    } else {
+        return parts;
+    }
 }
 
 function getRandomOperation() {
@@ -145,16 +171,20 @@ function buildEquation() {
     let highestNumber = 20;
     switch(Math.floor(Math.random() * 4)) {
         case 0: {// random division problem
-            return getGroupedOperation(getRandomOperation(), highestNumber) + " / " + getGroupedOperation(getRandomOperation(), highestNumber);
+            // return getGroupedOperation(getRandomOperation(), highestNumber) + " / " + getGroupedOperation(getRandomOperation(), highestNumber);
+            return buildEquationParts("/", highestNumber);
         }
         case 1: {// random multiplication problem
-            return getGroupedOperation(getRandomOperation(), highestNumber) + " * " + getGroupedOperation(getRandomOperation(), highestNumber);
+            // return getGroupedOperation(getRandomOperation(), highestNumber) + " * " + getGroupedOperation(getRandomOperation(), highestNumber);
+            return buildEquationParts("*", highestNumber);
         }
         case 2: {// random addition problem
-            return getGroupedOperation(getRandomOperation(), highestNumber) + " + " + getGroupedOperation(getRandomOperation(), highestNumber);
+            // return getGroupedOperation(getRandomOperation(), highestNumber) + " + " + getGroupedOperation(getRandomOperation(), highestNumber);
+            return buildEquationParts("+", highestNumber);
         }
         case 3: {// random subtraction problem
-            return getGroupedOperation(getRandomOperation(), highestNumber) + " - " + getGroupedOperation(getRandomOperation(), highestNumber);
+            // return getGroupedOperation(getRandomOperation(), highestNumber) + " - " + getGroupedOperation(getRandomOperation(), highestNumber);
+            return buildEquationParts("-", highestNumber);
         }
     }
 }
