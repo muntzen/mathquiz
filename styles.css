@@ -127,4 +127,19 @@ button.enabled {
         margin: 5px auto;
         /* Center the boxes on smaller screens */
     }
+  
+    #statsRow div.statsBox {
+        width: 20%;
+        margin: 0 auto;
+    }
+
+    #statsRow div.statsBox div.stat {
+        font-size: 28px;
+    }
+
+    #percent {
+        font-size: 40px !important;
+    }
+
+
 }
