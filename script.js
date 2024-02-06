@@ -1,4 +1,5 @@
-$(document).ready(function () {
+
+function setupGame() {
     $(".box").draggable({
         revert: "invalid",
         helper: "clone", // when you drag, it'll clone it instead of take it with you
@@ -19,6 +20,17 @@ $(document).ready(function () {
                 ui.draggable.removeClass("draggable");
                 ui.draggable.addClass("droppable");
             }
+
+            // if all the boxes are filled, then submit button should be enabled
+            let allFilled = true;
+            $("#bottomRow div").each(function () {
+                if ($(this).text().trim() == "") {
+                    allFilled = false;
+                }
+            });
+            $("#submitBtn").prop("disabled", !allFilled);
+            $("#submitBtn").addClass(allFilled ? "enabled" : "disabled");
+            $("#submitBtn").removeClass(allFilled ? "disabled" : "enabled");
         }
 
     });
@@ -30,7 +42,7 @@ $(document).ready(function () {
         initialize();
     });
     initialize();
-});
+}
 
 function checkAnswers() {
     const vals = [];
@@ -62,6 +74,8 @@ function checkAnswers() {
             previousVal = vals[i];
         }
 
+        saveResult(correct);
+
         if (correct) { 
             setTimeout(function () {
                 $("#submitBtn").hide();
@@ -74,13 +88,74 @@ function checkAnswers() {
             }, 3000);
         } else {
             setTimeout(function () {
-                alert("Incorrect!");
-                setTimeout(function () {
-                    clearResultColors();
-                }, 1000);
-            }, 500);
+                clearResultColors();
+            }, 2000);
         }
     }
+}
+
+function saveResult(correct) {
+    let results = JSON.parse(localStorage.getItem("results"));
+
+    if (results == null) {
+        results = {"attempts": 1};
+        results["correct"] = correct ? 1 : 0;
+        results["incorrect"] = correct ? 0 : 1;
+    } else {
+        results["attempts"] = parseInt(results["attempts"]) + 1;
+        if (correct) {
+            results["correct"] = parseInt(results["correct"]) + 1;
+        } else {
+            results["incorrect"] = parseInt(results["incorrect"]) + 1;
+        }
+    }
+    
+    localStorage.setItem("results", JSON.stringify(results));
+}
+
+function showStats() {
+    let results = JSON.parse(localStorage.getItem("results"));
+    if (results != null) {
+        $("#attempts").text(results["attempts"]);
+        $("#correct").text(results["correct"]);
+        let percent = (results["correct"] / results["attempts"]) * 100;
+        if (Number.isInteger(percent)) {
+            $("#percent").text(percent + "%");
+        } else {
+            $("#percent").text(percent.toFixed(2) + "%");
+        }
+    } else {
+        $("#attempts").text(0);
+        $("#correct").text(0);
+    }
+
+    $("#playAgainBtn").click(function () {
+        window.location.href = "index.html";
+    });
+
+    $("#clearStatsBtn").click(function () {
+        if (confirm("Are you sure you want to clear your stats?")) {
+            localStorage.removeItem("results");
+            $("#attempts").text(0);
+            $("#correct").text(0);
+            $("#percent").text("--");
+        }
+    });
+}
+
+function prettyPrintAnswers(appendAnswer = true) {
+    $("#topRow div").each(function () {
+        let answerRaw = Number(eval($(this).text().trim()));
+        if (!Number.isInteger(answerRaw)) {
+            answerRaw = answerRaw.toFixed(3);
+        }
+
+        if (appendAnswer) {
+            $(this).html($(this).text() + " <br/><br/>= " + answerRaw);
+        } else {
+            $(this).html(answerRaw);
+        }
+    });
 }
 
 function initialize() {
@@ -100,7 +175,18 @@ function initialize() {
     });
 
     $("#submitBtn").show();
+    $("#submitBtn").prop("disabled", true);
+    $("#submitBtn").addClass("disabled");
+    $("#submitBtn").removeClass("enabled");
+
     $("#playAgainBtn").hide();
+
+    let results = JSON.parse(localStorage.getItem("results"));
+    if (results != null) {
+        $("#statsLink").show()
+    } else {
+        $("#statsLink").hide()
+    }
 }
 
 function clearResultColors() {
@@ -109,9 +195,7 @@ function clearResultColors() {
 }
 
 function debug() {
-    $("#topRow div").each(function () {
-        $(this).html(eval($(this).text().trim()));
-    });
+    prettyPrintAnswers(false);
 }
 
 function getRandomNumber(highestNumber) {

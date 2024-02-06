@@ -21,6 +21,7 @@
         <h1>Math Quiz Game</h1>
         <div id="instructions">
             Arrange the equations in the correct order from smallest to largest.
+            <div id="statsLink" style="display: none"><a href="stats.html">View your stats</a></div>
         </div>    
     </header>
 
@@ -39,8 +40,8 @@
             <div class="box droppable" id="dropBox4">&nbsp;</div>
         </div>
     
-        <button id="submitBtn">Submit Answer</button>
-        <button id="playAgainBtn" style="display:none;">Play Again</button>
+        <button id="submitBtn" disabled="disabled" class="disabled">Submit Answer</button>
+        <button id="playAgainBtn" style="display:none;" class="enabled">Play Again</button>
     </main>
     
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -48,6 +49,11 @@
     <script src="jquery.ui.touch-punch.min.js"></script>
     <script src="jquery.fireworks.js"></script>
     <script src="script.js"></script>
+    <script lang="javascript">
+        $(document).ready(function() {
+            setupGame();
+        });
+    </script>
 </body>
 
 </html>

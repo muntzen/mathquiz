@@ -12,7 +12,7 @@ h1 {
     font-size: 36px;
 }
 
-#instructions {
+#instructions #statsHeader{
     font-size: 24px;
     margin: 20px;
 }
@@ -31,6 +31,46 @@ h1 {
     cursor: pointer;
     justify-content: center;
     align-items: center;
+}
+
+#statsLink {
+    margin-top: 10px;
+}
+
+#statsRow div.statsBox {
+    width: 100px;
+    height: 100px;
+    padding: 20px;
+    margin: 10px;
+    margin-top: 50px;
+    border: 2px solid #999;
+    border-radius: 10px;
+    display: inline-flex;
+    text-align: center;
+    vertical-align: middle;
+    line-height: normal;
+    justify-content: center;
+    align-items: center;
+}
+
+#statsRow div.statsBox div {
+    font-size: 24px;
+    font-weight: bold;
+    display: contents;
+}
+
+#statsRow div.statsBox div.stat {
+    font-size: 32px;
+    padding-top: 20px;
+}
+
+#percent {
+    font-size: 48px !important;
+}
+
+.disclaimer {
+    font-size: 12px;
+    margin: 20px;
 }
 
 .correct {
@@ -52,16 +92,28 @@ h1 {
     text-align: center;
 }
 
-#submitBtn, #playAgainBtn {
+#submitBtn, #playAgainBtn, #clearStatsBtn {
     width: 200px;
     height: 50px;
     border: none;
     border-radius: 10px;
-    background-color: #3498db;
     color: #fff;
     font-size: 16px;
-    cursor: pointer;
     margin-top: 20px;
+}
+
+#clearStatsBtn {
+    background-color: red;
+}
+
+button.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+button.enabled {
+    background-color: #3498db;
+    cursor: pointer;
 }
 
 /* Responsive layout for mobile devices */

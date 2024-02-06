@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats - Brain Fresh Math Quiz Game</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.glitch.global/0ebae9e2-be14-479d-8263-ce4db32443db/apple-touch-icon.png?v=1706725662882">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.glitch.global/0ebae9e2-be14-479d-8263-ce4db32443db/favicon-32x32.png?v=1706725671871">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.glitch.global/0ebae9e2-be14-479d-8263-ce4db32443db/favicon-16x16.png?v=1706725667318">
+    <link rel="manifest" href="site.webmanifest">
+</head>
+
+<body>
+
+    <header>
+        <h1>Math Quiz Game</h1>
+        <div id="statsHeader">
+            These stats are for the game play on this device only. 
+            <div class="disclaimer">Nothing is stored or shared outside of your device.</div>
+        </div>    
+    </header>
+
+    <main>
+        <div id="statsRow">
+            <div class="statsBox">
+                <div class="header">Attempts</div> 
+                <div class="stat" id="attempts"></div>
+            </div>
+            <div class="statsBox">
+                <div class="header">Correct</div> 
+                <div class="stat" id="correct"></div>
+            </div>
+            <div class="statsBox">
+                <div class="stat" id="percent"></div>
+            </div>
+        </div>
+
+        <button id="playAgainBtn" class="enabled">Play Again</button>
+        <button id="clearStatsBtn" class="enabled">Clear Stats</button>
+    </main>
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="script.js"></script>
+    <script lang="javascript">
+        $(document).ready(function() {
+            showStats();
+        });
+    </script>
+</body>
+
+</html>
