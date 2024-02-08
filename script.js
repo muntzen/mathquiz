@@ -49,7 +49,7 @@ function checkAnswers() {
     $("#bottomRow div").each(function () {
         let equation = $(this).text().trim();
         if (equation != '') {
-            vals.push(eval($(this).text().trim()));
+            vals.push(solveEquation($(this).text()));
         }
     });
     if (vals.length < $("#bottomRow div").length) {
@@ -145,7 +145,7 @@ function showStats() {
 
 function prettyPrintAnswers(appendAnswer = true) {
     $("#topRow div").each(function () {
-        let answerRaw = Number(eval($(this).text().trim()));
+        let answerRaw = Number(solveEquation($(this).text()));
         if (!Number.isInteger(answerRaw)) {
             answerRaw = answerRaw.toFixed(3);
         }
@@ -180,13 +180,6 @@ function initialize() {
     $("#submitBtn").removeClass("enabled");
 
     $("#playAgainBtn").hide();
-
-    let results = JSON.parse(localStorage.getItem("results"));
-    if (results != null) {
-        $("#statsLink").show()
-    } else {
-        $("#statsLink").hide()
-    }
 }
 
 function clearResultColors() {
@@ -231,23 +224,34 @@ function buildEquationParts(mainOperation, highestNumber) {
     }
 
     // let's make sure things are sane
-    if (eval(parts) == 'Infinity') {
+    if (solveEquation(parts) == 'Infinity') {
         return buildEquationParts(mainOperation, highestNumber);
     } else {
         return parts;
     }
 }
 
+function solveEquation(equation) {
+    equation = equation.trim();
+    let replacements = {"&divide;": "/", "&times;": "*", "&plus;": "+", "&minus;": "-", 
+        "÷": "/", "×": "*", "−": "-"};// maybe put in unicode?
+    for (let key in replacements) {
+        let regex = RegExp(key, "g");
+        equation = equation.replace(regex, replacements[key]);
+    }
+    return eval(equation);
+}
+
 function getRandomOperation() {
     switch(Math.floor(Math.random() * 4)) {
         case 0:
-            return "/";
+            return "&divide;";
         case 1:
-            return "*";
+            return "&times;";
         case 2:
-            return "+";
+            return "&plus;";
         case 3:
-            return "-";
+            return "&minus;";
     }
 }
 
@@ -256,19 +260,19 @@ function buildEquation() {
     switch(Math.floor(Math.random() * 4)) {
         case 0: {// random division problem
             // return getGroupedOperation(getRandomOperation(), highestNumber) + " / " + getGroupedOperation(getRandomOperation(), highestNumber);
-            return buildEquationParts("/", highestNumber);
+            return buildEquationParts("&divide;", highestNumber);
         }
         case 1: {// random multiplication problem
             // return getGroupedOperation(getRandomOperation(), highestNumber) + " * " + getGroupedOperation(getRandomOperation(), highestNumber);
-            return buildEquationParts("*", highestNumber);
+            return buildEquationParts("&times;", highestNumber);
         }
         case 2: {// random addition problem
             // return getGroupedOperation(getRandomOperation(), highestNumber) + " + " + getGroupedOperation(getRandomOperation(), highestNumber);
-            return buildEquationParts("+", highestNumber);
+            return buildEquationParts("&plus;", highestNumber);
         }
         case 3: {// random subtraction problem
             // return getGroupedOperation(getRandomOperation(), highestNumber) + " - " + getGroupedOperation(getRandomOperation(), highestNumber);
-            return buildEquationParts("-", highestNumber);
+            return buildEquationParts("&minus;", highestNumber);
         }
     }
 }

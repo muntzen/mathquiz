@@ -24,6 +24,7 @@ h1 {
     margin: 50px;
     border: 2px solid #999;
     border-radius: 10px;
+    font-size: 22px;
     display: inline-flex;
     text-align: center;
     vertical-align: middle;
@@ -65,7 +66,7 @@ h1 {
 }
 
 #percent {
-    font-size: 48px !important;
+    font-size:38px !important;
 }
 
 .disclaimer {
@@ -127,7 +128,7 @@ button.enabled {
         margin: 5px auto;
         /* Center the boxes on smaller screens */
     }
-  
+
     #statsRow div.statsBox {
         width: 20%;
         margin: 0 auto;
@@ -140,6 +141,5 @@ button.enabled {
     #percent {
         font-size: 32px !important;
     }
-
-
+    
 }
