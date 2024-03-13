@@ -41,6 +41,9 @@ function setupGame() {
     $("#playAgainBtn").click(function () {
         initialize();
     });
+    $("#showAnswersBtn").click(function () {
+        displayAnswers();
+    });
     initialize();
 }
 
@@ -85,6 +88,7 @@ function checkAnswers() {
             setTimeout(function () {
                 $("main").fireworks("destroy");
                 $("#playAgainBtn").show();
+                $("#showAnswersBtn").show();
             }, 3000);
         } else {
             setTimeout(function () {
@@ -101,12 +105,26 @@ function saveResult(correct) {
         results = {"attempts": 1};
         results["correct"] = correct ? 1 : 0;
         results["incorrect"] = correct ? 0 : 1;
+        results["current_streak"] = correct ? 1 : 0;
+        results["longest_streak"] = correct ? 1 : 0;
     } else {
         results["attempts"] = parseInt(results["attempts"]) + 1;
         if (correct) {
             results["correct"] = parseInt(results["correct"]) + 1;
+
+            if (results["current_streak"] == null) {
+                results["current_streak"] = 1;
+            }
+            if (results["longest_streak"] == null) {
+                results["longest_streak"] = 1;
+            }
+            results["current_streak"] = parseInt(results["current_streak"]) + 1;
+            if (results["current_streak"] > results["longest_streak"]) {
+                results["longest_streak"] = results["current_streak"];
+            }
         } else {
             results["incorrect"] = parseInt(results["incorrect"]) + 1;
+            results["current_streak"] = 0;
         }
     }
     
@@ -124,9 +142,23 @@ function showStats() {
         } else {
             $("#percent").text(percent.toFixed(2) + "%");
         }
+
+        if (results["current_streak"] != null) {
+            $("#currentStreak").text(results["current_streak"]);
+        } else {
+            $("#currentStreak").text("-");
+        }
+        if (results["longest_streak"] != null) {
+            $("#longestStreak").text(results["longest_streak"]);
+        } else {
+            $("#longestStreak").text("-");
+        }
     } else {
-        $("#attempts").text(0);
-        $("#correct").text(0);
+        $("#attempts").text("-");
+        $("#correct").text("-");
+        $("#percent").text("-");
+        $("#currentStreak").text("-");
+        $("#longestStreak").text("-");
     }
 
     $("#playAgainBtn").click(function () {
@@ -143,19 +175,26 @@ function showStats() {
     });
 }
 
-function prettyPrintAnswers(appendAnswer = true) {
-    $("#topRow div").each(function () {
-        let answerRaw = Number(solveEquation($(this).text()));
+function displayAnswers(consoleLog = false) {
+    $("#topRow div").each(function (index) {
+        let equation = $(this).text().trim();
+        if (equation == '') { 
+            equation = $($("#bottomRow div")[index]).text().trim();
+        }
+        let answerRaw = Number(solveEquation(equation));
         if (!Number.isInteger(answerRaw)) {
             answerRaw = answerRaw.toFixed(3);
         }
 
-        if (appendAnswer) {
-            $(this).html($(this).text() + " <br/><br/>= " + answerRaw);
+        if (consoleLog) {
+            console.log(answerRaw);
         } else {
-            $(this).html(answerRaw);
+            $($("#answerRow div")[index]).html(answerRaw);
         }
     });
+    if (!consoleLog) {
+        $("#answerRow").show();
+    }
 }
 
 function initialize() {
@@ -180,6 +219,8 @@ function initialize() {
     $("#submitBtn").removeClass("enabled");
 
     $("#playAgainBtn").hide();
+    $("#showAnswersBtn").hide();
+    $("#answerRow").hide();
 }
 
 function clearResultColors() {
@@ -188,7 +229,7 @@ function clearResultColors() {
 }
 
 function debug() {
-    prettyPrintAnswers(false);
+    displayAnswers(true);
 }
 
 function getRandomNumber(highestNumber) {
@@ -224,7 +265,7 @@ function buildEquationParts(mainOperation, highestNumber) {
     }
 
     // let's make sure things are sane
-    if (solveEquation(parts) == 'Infinity') {
+    if (solveEquation(parts) == 'Infinity' || solveEquation(parts) == 'NaN' || solveEquation(parts) == '-Infinity') { // javascript is weird
         return buildEquationParts(mainOperation, highestNumber);
     } else {
         return parts;

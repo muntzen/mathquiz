@@ -38,7 +38,7 @@ h1 {
     margin-top: 10px;
 }
 
-#statsRow div.statsBox {
+.statsRow div.statsBox {
     width: 100px;
     height: 100px;
     padding: 20px;
@@ -54,13 +54,13 @@ h1 {
     align-items: center;
 }
 
-#statsRow div.statsBox div {
+.statsRow div.statsBox div {
     font-size: 24px;
     font-weight: bold;
     display: contents;
 }
 
-#statsRow div.statsBox div.stat {
+.statsRow div.statsBox div.stat {
     font-size: 32px;
     padding-top: 20px;
 }
@@ -93,7 +93,7 @@ h1 {
     text-align: center;
 }
 
-#submitBtn, #playAgainBtn, #clearStatsBtn {
+#submitBtn, #playAgainBtn, #clearStatsBtn, #showAnswersBtn {
     width: 200px;
     height: 50px;
     border: none;
@@ -105,6 +105,18 @@ h1 {
 
 #clearStatsBtn {
     background-color: red;
+}
+
+#answerRow {
+    display: none;
+}
+
+#answerRow .box {
+    height: 50px;
+}
+
+#showAnswersBtn {
+    background-color: green;
 }
 
 button.disabled {
@@ -129,12 +141,12 @@ button.enabled {
         /* Center the boxes on smaller screens */
     }
 
-    #statsRow div.statsBox {
+    .statsRow div.statsBox {
         width: 20%;
         margin: 0 auto;
     }
 
-    #statsRow div.statsBox div.stat {
+    .statsRow div.statsBox div.stat {
         font-size: 28px;
     }
 
