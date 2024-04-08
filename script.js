@@ -79,21 +79,20 @@ function checkAnswers() {
 
         saveResult(correct);
 
+        $("#submitBtn").hide();
+        displayAnswers();
+
         if (correct) { 
             setTimeout(function () {
-                $("#submitBtn").hide();
                 $("main").fireworks();
             }, 10);
 
             setTimeout(function () {
                 $("main").fireworks("destroy");
                 $("#playAgainBtn").show();
-                $("#showAnswersBtn").show();
-            }, 3000);
+            }, 1500);
         } else {
-            setTimeout(function () {
-                clearResultColors();
-            }, 2000);
+            $("#playAgainBtn").show();
         }
     }
 }
